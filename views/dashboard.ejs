@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>Dashboard</title>
+</head>
+<body class="bg-gray-200">
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <div class="bg-gray-800 text-white h-screen w-1/4 p-4">
+            <div class="text-2xl font-semibold mb-4">Dashboard</div>
+            <div class="mb-4">
+                <div class="text-gray-300">Name:</div>
+                <div class="text-white"><%= name %></div>
+            </div>
+            <div class="mb-4">
+                <div class="text-gray-300">Email:</div>
+                <div class="text-white"><%= email %></div>
+            </div>
+            <a href="/api/logout" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-red-400">Logout</a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="w-3/4 p-8">
+            <!-- Notification Box -->
+            <div class="bg-white p-4 rounded shadow-md mb-4">
+                <h2 class="text-xl font-semibold mb-4">Notifications</h2>
+                
+                <ul id="notificationList" class="mb-4">
+                    <% notifications.map(element => { %>
+                        <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mb-4">
+                          <p><span class="font-semibold">Info:</span> <%= element.body %></p>
+                        </div>
+                        <% }) %>
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+
+<script>
+    const socket = io('http://localhost:3000');
+    const notificationList = document.getElementById('notificationList');
+    socket.on(`userId-<%= id %>-notification`, function (args) {
+        const item = document.createElement('li');
+      console.log(args);
+      item.innerHTML = `<div class="mb-2">
+                    <div class="bg-blue-200 text-blue-800 p-2 rounded">
+                        ${args.message}
+                    </div>
+                </div>`;
+      notificationList.appendChild(item);
+    });
+  </script>
+
+</body>
+</html>
